@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>IT Asset Management Dashboard</title>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <!-- <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> -->
+  <link rel="icon" href="{{ asset('favicon.ico') }}">
   <style>
     body {
       font-family: Arial, sans-serif;
