@@ -1,23 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TwoFactorAuthController;
 
-Auth::routes();
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-    // 2FA Routes
-    Route::get('/2fa/setup', [TwoFactorAuthController::class, 'setup'])->name('2fa.setup');
-    Route::post('/2fa/enable', [TwoFactorAuthController::class, 'enable'])->name('2fa.enable');
-    Route::post('/2fa/disable', [TwoFactorAuthController::class, 'disable'])->name('2fa.disable');
-
-    // 2FA Verification
-    Route::get('/2fa/verify', [TwoFactorAuthController::class, 'verify'])->name('2fa.verify');
-    Route::post('/2fa/authenticate', [TwoFactorAuthController::class, 'authenticate'])->name('2fa.authenticate');
-});
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
-    return view('welcome');
+    return to_route('filament.pages.dashboard');
+})->name('filament.auth.login');
+
+Route::middleware([
+    'auth:sanctum',
+    config('filament-companies.auth_session'),
+    'verified',
+])->group(function () {
 });
+
+
+if (!app()->environment('production') || !app()->runningUnitTests()) {
+    Route::get('superadmin', function () {
+        auth()->user()->assignRole('super_admin');
+        return redirect()->back();
+    });
+}
